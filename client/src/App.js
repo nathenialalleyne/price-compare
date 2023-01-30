@@ -4,13 +4,27 @@ import { Loading } from "./components/Loading";
 import axios from "axios";
 
 function App() {
-  const [testData, setTestData] = useState([{}]);
+  const [testData, setTestData] = useState();
+  const [error, setError] = useState(false);
+  let key = 0;
   useEffect(() => {
     axios.get("/test").then((response) => {
-      console.log(response);
+      setTestData(response.data);
     });
   }, []);
-  // return <div>{testData ? <Home data={testData} /> : <Loading />}</div>;
+
+  return (
+    <div>
+      {testData ? (
+        Object.keys(testData).map((data) => {
+          key++;
+          return <Home data={data} key={key} />;
+        })
+      ) : (
+        <Loading />
+      )}
+    </div>
+  );
 }
 
 export default App;

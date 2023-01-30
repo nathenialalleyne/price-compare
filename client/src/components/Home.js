@@ -1,3 +1,3 @@
 export function Home(props) {
-  return <div>{props.data}</div>;
+  return <div className="test">{props.data}</div>;
 }
