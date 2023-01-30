@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { Home } from "./components/Home";
 import { Loading } from "./components/Loading";
+import axios from "axios";
 
 function App() {
   const [testData, setTestData] = useState([{}]);
   useEffect(() => {
-    fetch("/test")
-      .then((response) => response.json())
-      .then((data) => {
-        setTestData(data);
-      });
+    axios.get("http://localhost:5000/test").then((response) => {
+      console.log(response);
+    });
   }, []);
   // return <div>{testData ? <Home data={testData} /> : <Loading />}</div>;
 }
