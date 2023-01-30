@@ -1,10 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import cors from "cors";
 
 const app = express();
 
-app.get("/test", cors(), (req, res) => {
+app.get("/test", (req, res) => {
   res.json({ test: "test" });
 });
 

@@ -6,7 +6,7 @@ import axios from "axios";
 function App() {
   const [testData, setTestData] = useState([{}]);
   useEffect(() => {
-    axios.get("http://localhost:5000/test").then((response) => {
+    axios.get("/test").then((response) => {
       console.log(response);
     });
   }, []);
