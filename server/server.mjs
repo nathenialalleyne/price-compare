@@ -1,28 +1,47 @@
 import express from "express";
 import bodyParser from "body-parser";
 import puppeteer from "puppeteer";
+import fs from 'fs'
 const app = express();
-(async () => {
+
+
+const linkData = (async () => {
   const browser = await puppeteer.launch({
-    headless: true,
     executablePath: "/usr/bin/google-chrome",
     args: ["--no-sandbox", "--disable-gpu"],
   });
+
+
   const page = await browser.newPage();
-  await page.goto("https://www.bestbuy.com/", {
-    waitUntil: "networkidle2",
-    timeout: 0,
+
+  const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' +
+  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
+  await page.setUserAgent(userAgent);
+
+  console.log('loading page')
+  await page.goto("https://www.bestbuy.com/site/searchpage.jsp?st=cpu", {
+    waitUntil: "domcontentloaded",
+    timeout: 0
   });
+
+  console.log('loaded')
+
+  if (await page.screenshot({path: './screenshot.png'})){
+    console.log('screenshotted')
+  }
+
+
+
+  await page.waitForSelector('.item-count')
 
   const html = await page.evaluate(() => {
-    Array.from(document.body.querySelectorAll("a"), (e) => {
-      e.href;
+    return document.querySelector(".item-count").innerHTML
     });
-  });
 
-  console.log(html);
 
+  await page.close();
   await browser.close();
+  console.log(html)
 })();
 
 app.get("/test", (req, res) => {
