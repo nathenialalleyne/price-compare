@@ -4,25 +4,11 @@ import { Loading } from "./components/Loading";
 import axios from "axios";
 
 function App() {
-  const [testData, setTestData] = useState();
-  const [error, setError] = useState(false);
-  let key = 0;
-  useEffect(() => {
-    axios.get("/test").then((response) => {
-      setTestData(response.data);
-    });
-  }, []);
+  const [loadingScreen, setLoadingScreen] = useState(false);
 
   return (
     <div>
-      {testData ? (
-        Object.keys(testData).map((data) => {
-          key++;
-          return <Home data={data} key={key} />;
-        })
-      ) : (
-        <Loading />
-      )}
+      <Home load={setLoadingScreen} />
     </div>
   );
 }

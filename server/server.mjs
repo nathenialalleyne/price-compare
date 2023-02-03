@@ -1,53 +1,57 @@
 import express from "express";
-import bodyParser from "body-parser";
 import puppeteer from "puppeteer";
-import fs from 'fs'
+import fs, { link } from "fs";
 const app = express();
 
-
-const linkData = (async () => {
+const linkData = async (link) => {
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
-    args: ["--no-sandbox", "--disable-gpu"],
   });
-
 
   const page = await browser.newPage();
 
-  const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' +
-  'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
+  const userAgent =
+    "Mozilla/5.0 (X11; Linux x86_64)" +
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
   await page.setUserAgent(userAgent);
 
-  console.log('loading page')
-  await page.goto("https://www.bestbuy.com/site/searchpage.jsp?st=cpu", {
-    waitUntil: "domcontentloaded",
-    timeout: 0
+  console.log("loading page");
+  await page.goto(link, {
+    waitUntil: "load",
+    timeout: 0,
   });
 
-  console.log('loaded')
+  console.log("loaded");
 
-  if (await page.screenshot({path: './screenshot.png'})){
-    console.log('screenshotted')
-  }
+  await page.waitForSelector("img");
 
-
-
-  await page.waitForSelector('.item-count')
-
-  const html = await page.evaluate(() => {
-    return document.querySelector(".item-count").innerHTML
+  const test = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll(".sku-item"), (e) => {
+      e.innerHTML;
     });
+  });
 
+  console.log(test);
 
   await page.close();
   await browser.close();
-  console.log(html)
-})();
+
+  return test;
+};
 
 app.get("/test", (req, res) => {
   res.json({
     test: "test",
     test2: "testsets",
+  });
+});
+
+app.post("/page", async (req, res) => {
+  console.log("recieved");
+  const func = linkData(res);
+  await func;
+  req.send({
+    info: func,
   });
 });
 
