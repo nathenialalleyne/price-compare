@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Items } from "./Items";
 
 export function Home(props) {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState();
   const loading = props.load;
 
   return (
@@ -12,7 +12,7 @@ export function Home(props) {
       <input
         id="item"
         onChange={(e) => {
-          setInputText(e);
+          setInputText(e.target.value);
         }}
       ></input>
       <button
@@ -23,11 +23,10 @@ export function Home(props) {
           loading(true);
           axios
             .post("/page", {
-              items: inputText,
+              item: inputText,
             })
-            .then((r) => {})
-            .catch((e) => {
-              console.log(e);
+            .then((response) => {
+              console.log(response);
             });
         }}
       >

@@ -1,9 +1,11 @@
 import express from "express";
 import puppeteer from "puppeteer";
+import bodyParser from "body-parser";
 import fs, { link } from "fs";
 const app = express();
 
 const linkData = async (link) => {
+  console.log(link);
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
   });
@@ -46,13 +48,13 @@ app.get("/test", (req, res) => {
   });
 });
 
-app.post("/page", async (req, res) => {
-  console.log("recieved");
-  const func = linkData(res);
-  await func;
-  req.send({
-    info: func,
-  });
+app.post("/page", bodyParser.json(), async (req, res) => {
+  try {
+    const func = linkData(req.body.item);
+    res.send(await JSON.stringify(func));
+  } catch (err) {
+    res.send("broke");
+  }
 });
 
 const port = process.env.PORT || 5000;
