@@ -1,6 +1,6 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import { neweggScrape } from "./scrape.mjs";
+import { bhScrape, neweggScrape } from "./scrape.mjs";
 const app = express();
 
 const linkData = async (link) => {
@@ -49,7 +49,8 @@ const linkData = async (link) => {
 };
 
 const obj = await linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR");
-neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
+// neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
+bhScrape("https://www.bhphotovideo.com/c/search?q="+obj.name.replaceAll(" ", "+"))
 
 
 
