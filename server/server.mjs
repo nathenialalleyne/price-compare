@@ -4,8 +4,11 @@ import fs, { link } from "fs";
 const app = express();
 
 const linkData = async (link) => {
+  const obj = {
+  }
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
+    args: ['--no-sandbox']
   });
 
   const page = await browser.newPage();
@@ -23,21 +26,30 @@ const linkData = async (link) => {
 
   console.log("loaded");
 
-  await page.waitForSelector("img");
+  await page.waitForSelector(".a-offscreen");
 
-  const test = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".sku-item"), (e) => {
-      e.innerHTML;
-    });
+  const price = await page.evaluate(() => {
+    return document.querySelector('.a-offscreen').innerHTML
   });
 
-  console.log(test);
+  obj.price = price
 
+  const name = await page.evaluate(() => {
+    return document.querySelector('#productTitle').innerHTML
+  });
+
+  obj.name = name
+  
   await page.close();
   await browser.close();
 
-  return test;
+  console.log(obj)
+
+  return obj;
 };
+
+linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR")
+linkData("https://www.amazon.com/AmazonBasics-Pound-Non-Stick-Making-Machine/dp/B07VCFD13V?ref_=ast_sto_dp&th=1&psc=1")
 
 app.get("/test", (req, res) => {
   res.json({
