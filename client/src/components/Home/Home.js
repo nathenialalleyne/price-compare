@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Items } from "../Items";
 import './Home.scss'
@@ -6,11 +6,15 @@ import './Home.scss'
 
 export function Home(props) {
   const [inputText, setInputText] = useState("");
-  const [selected, setSelected] = useState("")
+  const [selected, setSelected] = useState("amazon")
   const loading = props.load;
   const radioRef = useRef();
 
 //Amazon, Bestbuy, Newegg, B&H Photos
+                 
+  useEffect(()=>{
+    console.log(selected)
+  })
 
   return (
     <div className="home-container">
@@ -34,6 +38,7 @@ export function Home(props) {
               axios
                 .post("/page", {
                   items: inputText,
+                  site: selected,
                 })
                 .then((r) => {})
                 .catch((e) => {
@@ -49,7 +54,7 @@ export function Home(props) {
         
               
                 <form onChange={(e)=>{
-                  console.log(e.target)
+                  setSelected(e.target.id)
                 }}>
                   <label className="selected">
                     <input type="radio" name="retailer" id="amazon" defaultChecked></input>

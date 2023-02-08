@@ -29,33 +29,43 @@ export const neweggScrape = async (link, site) => {
     await page.waitForSelector(".item-title");
 
     const change = await page.evaluate(()=>{
-      console.log('going to ' + document.querySelector('.item-title').href)
-      console.log('test')
-      return document.querySelector('.item-title').href
+      return document.querySelector('.item-button-area > button')
     })
 
-    await page.goto(change, {
-      waitUntil: "load",
-      timeout: 0,
-    })
+    await page.click('.item-button-area > button')
 
-    console.log('loaded 2')
+    await page.waitForSelector('.modal-content')
+    await page.waitForSelector('.modal-header > .close')
 
-    await page.waitForSelector('h1')
+    await page.screenshot({path: 'screenshot.png'})
+
+    await page.waitForSelector('.modal-body > .item-container > .price > .price-current > strong + sup')
 
     let price = ''
+
+    const total = await page.evaluate(()=>{
+      const big = document.querySelector(".modal-body > .item-container > .price > .price-current > strong ").innerHTML
+      const small = document.querySelector(".modal-body > .item-container > .price > .price-current > sup ").innerHTML
+
+      price = "$" +big+small
+      return price
+    })
+
+    console.log(total)
+
+    // let price = ''
     
-    const getPrice = await page.evaluate(() => {
-      const big = document.querySelector('.product-title').innerHTML
-      return big
+    // const getPrice = await page.evaluate(() => {
+    //   const big = document.querySelector('.product-title').innerHTML
+    //   return big
 
-    });
+    // });
 
-    console.log(getPrice)
+    // console.log(getPrice)
     
     await page.close();
     await browser.close();
 
   
-    return price;
+    // return price;
   };
