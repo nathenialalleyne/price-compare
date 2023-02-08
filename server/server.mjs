@@ -1,6 +1,6 @@
 import express from "express";
 import puppeteer from "puppeteer";
-import fs, { link } from "fs";
+import { neweggScrape } from "./scrape.mjs";
 const app = express();
 
 const linkData = async (link) => {
@@ -48,8 +48,10 @@ const linkData = async (link) => {
   return obj;
 };
 
-linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR")
-linkData("https://www.amazon.com/AmazonBasics-Pound-Non-Stick-Making-Machine/dp/B07VCFD13V?ref_=ast_sto_dp&th=1&psc=1")
+const obj = await linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR");
+neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
+
+
 
 app.get("/test", (req, res) => {
   res.json({

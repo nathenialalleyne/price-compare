@@ -8,8 +8,8 @@
     label{
         input[type=radio]{
             opacity: 0;
-            width: 0;
-            height: 0;
+            width: 0px;
+            height: 0px;
             position: absolute;
     
         }
@@ -33,8 +33,11 @@
     }
 }
 
-.selected{
-    img{
-        border: .2px lightgreen solid !important;       
+.retailer-button-container{
+
+    label{
+        input[type=radio]:checked + img{
+            border: .2px lightgreen solid ;  
+        }
     }
 }
