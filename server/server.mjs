@@ -32,7 +32,7 @@ const linkData = async (link) => {
     return document.querySelector('.a-offscreen').innerHTML
   });
 
-  obj.price = price
+  obj.aPrice = price
 
   const name = await page.evaluate(() => {
     return document.querySelector('#productTitle').innerHTML
@@ -49,15 +49,18 @@ const linkData = async (link) => {
 };
 
 const obj = await linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR");
-// neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
-bhScrape("https://www.bhphotovideo.com/c/search?q="+obj.name.replaceAll(" ", "+"))
+const newegg = await neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
+const bh = await bhScrape("https://www.bhphotovideo.com/c/search?q="+obj.name.replaceAll(" ", "+"))
 
-
+let prices = {
+  amazon: obj.aPrice,
+  newegg: newegg,
+  bhphoto: bh
+}
 
 app.get("/test", (req, res) => {
   res.json({
-    test: "test",
-    test2: "testsets",
+    results: prices
   });
 });
 

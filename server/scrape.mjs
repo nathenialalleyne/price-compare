@@ -54,13 +54,12 @@ export const neweggScrape = async (link, site) => {
     await page.close();
     await browser.close();
 
-    return obj.price = price;
+    return total;
   };
 
   export const bhScrape = async (link, site) => {
     console.log(link)
-      const obj = {
-      }
+
       const browser = await puppeteer.launch({
         executablePath: "/usr/bin/google-chrome",
         args: ['--no-sandbox']
@@ -78,8 +77,7 @@ export const neweggScrape = async (link, site) => {
         waitUntil: "load",
         timeout: 0,
       });
-    
-      await page.screenshot({path: "screenshot.png"})
+  
   
       console.log("loaded");
     
@@ -95,56 +93,10 @@ export const neweggScrape = async (link, site) => {
         return price
       })
   
-      console.log(change)
-
       await page.close();
       await browser.close();
   
-      return obj.price = change;
+      return change;
     };
 
-    export const bestBuyScrape = async (link, site) => {
-      console.log(link)
-        const obj = {
-        }
-        const browser = await puppeteer.launch({
-          executablePath: "/usr/bin/google-chrome",
-          args: ['--no-sandbox']
-        });
-      
-        const page = await browser.newPage();
-      
-        const userAgent =
-          "Mozilla/5.0 (X11; Linux x86_64)" +
-          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36";
-        await page.setUserAgent(userAgent);
-      
-        console.log("loading page");
-        await page.goto(link, {
-          waitUntil: "load",
-          timeout: 0,
-        });
-      
-        await page.screenshot({path: "screenshot.png"})
-    
-        console.log("loaded");
-      
-        await page.waitForSelector("span[data-selenium=uppedDecimalPriceFirst]");
-    
-        let price = ''
   
-        const change = await page.evaluate(()=>{
-          const big = document.querySelector("span[data-selenium=uppedDecimalPriceFirst]").innerHTML;
-          const small = document.querySelector("sup[data-selenium=uppedDecimalPriceSecond]").innerHTML
-  
-          price = big+"."+small
-          return price
-        })
-    
-        console.log(change)
-  
-        await page.close();
-        await browser.close();
-    
-        return obj.price = change;
-      };

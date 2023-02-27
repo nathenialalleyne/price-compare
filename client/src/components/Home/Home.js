@@ -50,32 +50,6 @@ export function Home(props) {
           </button>
         </div>
       </div>
-      <div className="retailer-button-container">
-        
-              
-                <form onChange={(e)=>{
-                  setSelected(e.target.id)
-                }}>
-                  <label className="selected">
-                    <input type="radio" name="retailer" id="amazon" defaultChecked></input>
-                    <img src={require("../../icons/az-logo.png")} alt="Amazon Logo"></img>
-                  </label>
-                  
-                  <label>
-                    <input type="radio" name="retailer" id="bestbuy"></input>
-                    <img src={require("../../icons/bb-logo.png")} alt="Best Buy Logo"></img>
-                  </label>
-                  <label >
-                    <input type="radio" name="retailer" id="bnh" ></input>
-                    <img src={require("../../icons/bh-logo.png")} alt="B&H Photos Logo"></img>
-                  </label>
-                  <label>
-                    <input type="radio" name="retailer" id="newegg"></input>
-                    <img src={require("../../icons/ne-logo.png")} alt="Newegg Logo"></img>
-                  </label>
-                </form>
-
-      </div>
     </div>
   );
 }
