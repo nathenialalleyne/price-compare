@@ -13,7 +13,7 @@ export function Home(props) {
 //Amazon, Bestbuy, Newegg, B&H Photos
                  
   useEffect(()=>{
-    console.log(selected)
+    console.log(inputText)
   })
 
   return (
@@ -24,7 +24,7 @@ export function Home(props) {
           <input
             id="item"
             onChange={(e) => {
-              setInputText(e);
+              setInputText(e.target.value);
             }}
           ></input>
           </div>
@@ -36,13 +36,14 @@ export function Home(props) {
               e.preventDefault();
               loading(true);
               axios
-                .post("/page", {
-                  items: inputText,
-                  site: selected,
-                })
+                .post("/page" , {
+                  "items": inputText,
+                  },{ headers: {
+                    'Content-Type': 'application/json'
+                  }})
                 .then((r) => {})
                 .catch((e) => {
-                  console.log(e);
+                  console.error(e);
                 });
             }}
           >

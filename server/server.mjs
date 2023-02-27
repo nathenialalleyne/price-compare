@@ -1,20 +1,11 @@
 import express from "express";
 import puppeteer from "puppeteer";
-<<<<<<< HEAD
 import bodyParser from "body-parser";
 import fs, { link } from "fs";
-const app = express();
+import {neweggScrape, bhScrape} from './scrape.mjs'
 
-const linkData = async (link) => {
-  console.log(link);
-=======
-import { bhScrape, neweggScrape } from "./scrape.mjs";
 const app = express();
-
 const linkData = async (link) => {
-  const obj = {
-  }
->>>>>>> 8bbba4d816e3a6c79e27f52066dcbf177410abd9
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
     args: ['--no-sandbox']
@@ -41,42 +32,37 @@ const linkData = async (link) => {
     return document.querySelector('.a-offscreen').innerHTML
   });
 
-  obj.aPrice = price
-
   const name = await page.evaluate(() => {
     return document.querySelector('#productTitle').innerHTML
   });
 
-  obj.name = name
   
   await page.close();
   await browser.close();
 
-  console.log(obj)
 
-  return obj;
+  console.log('done ' + price + " " + name )
+  return {price,name}
 };
 
-const obj = await linkData("https://www.amazon.com/dp/B0BQ921V81?ref_=cm_sw_r_cp_ud_dp_ZP396QM76R8V7R8C1BBR");
-const newegg = await neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
-const bh = await bhScrape("https://www.bhphotovideo.com/c/search?q="+obj.name.replaceAll(" ", "+"))
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-let prices = {
-  amazon: obj.aPrice,
-  newegg: newegg,
-  bhphoto: bh
-}
-
-app.get("/test", (req, res) => {
-  res.json({
-    results: prices
-  });
-});
-
-app.post("/page", bodyParser.json(), async (req, res) => {
+app.post("/page", bodyParser.json() , async (req, res) => {
   try {
-    const func = linkData(req.body.item);
-    res.send(await JSON.stringify(func));
+    console.log(req.body.items)
+    const func = await linkData(req.body.items);
+    const newegg = await neweggScrape("https://newegg.com/p/pl?d="+obj.name.replaceAll(" ", "+"))
+    const bh = await bhScrape("https://www.bhphotovideo.com/c/search?q="+obj.name.replaceAll(" ", "+"))
+
+    let prices = {
+      amazon: obj.price,
+      newegg: newegg,
+      bhphoto: bh
+    }
+
+    res.send(prices);
   } catch (err) {
     res.send("broke");
   }
