@@ -1,11 +1,20 @@
 import express from "express";
 import puppeteer from "puppeteer";
+<<<<<<< HEAD
+import bodyParser from "body-parser";
+import fs, { link } from "fs";
+const app = express();
+
+const linkData = async (link) => {
+  console.log(link);
+=======
 import { bhScrape, neweggScrape } from "./scrape.mjs";
 const app = express();
 
 const linkData = async (link) => {
   const obj = {
   }
+>>>>>>> 8bbba4d816e3a6c79e27f52066dcbf177410abd9
   const browser = await puppeteer.launch({
     executablePath: "/usr/bin/google-chrome",
     args: ['--no-sandbox']
@@ -64,13 +73,13 @@ app.get("/test", (req, res) => {
   });
 });
 
-app.post("/page", async (req, res) => {
-  console.log("recieved");
-  const func = linkData(res);
-  await func;
-  req.send({
-    info: func,
-  });
+app.post("/page", bodyParser.json(), async (req, res) => {
+  try {
+    const func = linkData(req.body.item);
+    res.send(await JSON.stringify(func));
+  } catch (err) {
+    res.send("broke");
+  }
 });
 
 const port = process.env.PORT || 5000;
